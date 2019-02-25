@@ -11,7 +11,7 @@ fnHelp () {
 }
 
 fnVersion () {
-  source <(curl -s https://raw.githubusercontent.com/runserve/runserve/master/runserve.latest)
+  latest=$(curl -s https://raw.githubusercontent.com/runserve/runserve/master/runserve.latest)
     sleep 2
     echo $latest
     echo "v0.1"
