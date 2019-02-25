@@ -10,26 +10,73 @@ fnHelp () {
     exit 1
 }
 
-fnCreateConfigFile () {
-    echo "hello config file"
-    exit 1
-}
-
 fnVersion () {
-    echo "v2.2"
+    echo "v0.1"
     exit 1
 }
 
 fnBash () {
     fnGetConfig
-    docker run --rm --name=$containerName -it -v $(pwd):/app -e GITUSER="$gitUser" -e GITEMAIL="$gitEmail" -e PORT=$port -p $port:$port -p 8080:8080 $dockerImage runserveStart $2 $3 $4 $5 $6 $7 $8 $9
-    read -p "Commit changes before terminate runserver? [Y/n]: " changes
-    exit 1 
+    docker run --rm --name=$containerName-$port -it -v $(pwd):/app -e GITUSER="$gitUser" -e GITEMAIL="$gitEmail" -e PORT=$port -p $port:$port -p 8080:8080 $dockerImage containerStart $2 $3 $4 $5 $6 $7 $8 $9
+    #read -p "Commit changes before terminate runserver? [Y/n]: " changes
+    exit 1
 }
 
 fnGetConfig () {
-    source ~/.config/runserve/runserve.config
+    source .runserve/config
+    if [ ${#containerName} -lt '2' ]; then
+      fnInitConfig
+    else
+      source .runserve/config
+    fi
 }
+
+fnInitConfig () {
+    ### CHECK CONFIG VARS:
+    mkdir .runserve
+    touch ./.runserve/config
+        read -p 'Choose Angular local port (4200-4219)[4200]: ' port
+        if [ ${#port} -lt 3 ]; then
+            echo "port='4200'" > $LOCAL_CONFIG
+            port=4200
+        else
+            echo "port='$port'" >> $LOCAL_CONFIG
+        fi
+        read -p 'Github login: ' gitUser
+        if [ ${#gitUser} -gt 3 ]; then
+            echo "gitUser='$gitUser'" >> $LOCAL_CONFIG
+        fi
+        read -p 'Github email: ' gitEmail
+        if [ ${#gitEmail} -gt 3 ]; then
+            echo "gitEmail='$gitEmail'" >> $LOCAL_CONFIG
+        fi
+        echo "Choose RUNSERVE version:"
+            echo "2) Angular 7.3.1"
+            echo "2) Angular 7.3.2"
+            echo "2) Angular 7.3.3"
+            read -p "Choose: " dockerImage
+            if [[ $dockerImage = 1 || $docker_image = 7.3.1 ]]; then
+                dockerImage="runserve/angular_7.3.1:0.1"
+                echo $dockerImage
+            if [[ $dockerImage = 2 || $docker_image = 7.3.2 ]]; then
+                dockerImage="runserve/angular_7.3.2:0.1"
+                echo $dockerImage
+            elif [[ $dockerImage = 3 || $dockerImage = 7.3.3 ]]; then
+                dockerImage="runserve/angular_7.3.3:0.1"
+                echo $dockerImage
+            fi
+            echo "dockerImage='$dockerImage'" >> $LOCAL_CONFIG
+        read -p "Default container name [angular-dev-env-"$port"]: " containerName
+        if [ ${#containerName} -lt 3 ]; then
+            echo "containerName='angular-dev-env'" >> $LOCAL_CONFIG
+        else
+            echo "containerName='$containerName'" >> $LOCAL_CONFIG
+        fi
+    if [[ $1 = bash ]]; then fnBash
+    else exit 1;
+    fi
+}
+
 
 
 
@@ -47,56 +94,16 @@ fnGetConfig () {
 ### READ CONFIG VARS:
 
 
-# GLOBAL_CONFIG=~/.config/runserve/runserve.config
-# LOCAL_CONFIG=./.runserve/config
-# source $GLOBAL_CONFIG
-# if [ -f $LOCAL_CONFIG ]; then
-#     source $LOCAL_CONFIG
-# fi
-#################################################################
-# ### CHECK CONFIG VARS:
-# if [ ${#port} -lt '2' ]; then
-#     read -p 'Angular local port (4200-4219)[4200]: ' port
-#     if [ ${#port} -lt 3 ]; then
-#         echo "port='4200'" >> $GLOBAL_CONFIG
-#     else
-#         echo "port='$port'" >> $GLOBAL_CONFIG
-#     fi
-# fi
-# if [ ${#gitUser} -lt '3' ]; then
-#     read -p 'Github login: ' gitUser
-#     if [ ${#gitUser} -gt 3 ]; then
-#         echo "gitUser='$gitUser'" >> $GLOBAL_CONFIG
-#     fi
-# fi
-# if [ ${#gitEmail} -lt '3' ]; then
-#     read -p 'Github email: ' gitEmail
-#     if [ ${#gitEmail} -gt 3 ]; then
-#         echo "gitEmail='$gitEmail'" >> $GLOBAL_CONFIG
-#     fi
-# fi
-# if [ ${#dockerImage} -lt '3' ]; then
-#     echo "Choose Angular version:"
-#         echo "1) 7.3.1"
-#         echo "2) 7.3.2"
-#         read -p "Choose: " dockerImage
-#         if [[ $dockerImage = 1 || $docker_image = 7.3.1 ]]; then
-#             dockerImage="ngxdnd/angular-dev-env:7.3.1_v2"
-#             echo $dockerImage
-#         elif [[ $dockerImage = 2 || $dockerImage = 7.3.2 ]]; then
-#             dockerImage="ngxdnd/angular-dev-env:7.3.2_v2"
-#             echo $dockerImage
-#         fi
-#         echo "dockerImage='$dockerImage'" >> $GLOBAL_CONFIG
-# fi
-# if [ ${#containerName} -lt '2' ]; then
-#     read -p 'Default container name [angular-dev-env]: ' containerName
-#     if [ ${#containerName} -lt 3 ]; then
-#         echo "containerName='angular-dev-env'" >> $GLOBAL_CONFIG
-#     else
-#         echo "containerName='$containerName'" >> $GLOBAL_CONFIG
-#     fi
-# fi
+#GLOBAL_CONFIG=~/.config/runserve/runserve.config
+LOCAL_CONFIG=./.runserve/config
+#source $GLOBAL_CONFIG
+if [ -f $LOCAL_CONFIG ]; then
+    source $LOCAL_CONFIG
+else
+  fnInitConfig
+fi
+################################################################
+
 #################################################################
 ## CTRL-V CTRL-Z KEYPRESS:
 stty quit "^Z"
@@ -112,14 +119,9 @@ function ctrl_c(){
 
 
 if [[ $1 = version ]]; then fnVersion
-elif [[ $1 = init ]]; then fnCreateConfigFile
+elif [[ $1 = init ]]; then fnInitConfig
 elif [[ $1 = -h || $1 = --help || $1 = help ]]; then fnHelp
 elif [[ $1 = bash ]]; then fnBash
-elif [[ $1 = stop ]]; then
-    echo " docker stopping, wait few seconds..."
-    docker stop ngx-dev-env
-    echo 'stopped'
-    exit 1
 elif [[ $1 = update ]]; then
     if [[ $2 = dev ]]; then
         if [[ $3 = getfrombin ]]; then
@@ -133,15 +135,6 @@ elif [[ $1 = update ]]; then
     echo 'comming soon...'
     fi
     exit 1
-elif [[ $1 = nodaemon ]]; then
-    docker run --rm --name=$containerName -it -v $(pwd):/app -e GITUSER="$gitUser" -e GITEMAIL="$gitEmail" -e PORT=$port -p $port:$port $dockerImage start_script $2 $3 $4 $5 $6 $7 $8 $9 
-    docker logs $containerName -f
-    exit 1
-elif [[ $2 = serve ]]; then
-    docker run  --rm  -d --name=$containerName -it -v $(pwd):/app -e GITUSER="$gitUser" -e GITEMAIL="$gitEmail"  -e PORT=$port -p $port:$port $dockerImage start_script $1 $2 $3 $4 $5 $6 $7 $8 $9 --host=0.0.0.0 --port=$port
-    docker logs $containerName -f
-    exit 1
 else fnHelp
-    
-fi
 
+fi

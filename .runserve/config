@@ -1,0 +1,5 @@
+port='4200'
+gitUser='mirek'
+gitEmail='mirek'
+dockerImage='runserve/angular_7.3.1:0.1'
+containerName='4200'
