@@ -1,22 +1,36 @@
 #!/bin/bash
+version='0.0.2'
+
 
 fnHelp () {
+    echo ' '
     echo "runserve help            - show help!!!"
     echo "         init            - initialize runserver config"
     echo "         version         - version of this file"
     echo "         update          - updating this file"
-    echo "         stop            - stopping container"
-    echo "         nodaemon        - run container with no daemon"
+    echo ' '
     exit 1
 }
 
 fnVersion () {
   latest=$(curl -s https://raw.githubusercontent.com/runserve/runserve/master/runserve.latest)
-    sleep 2
-    echo $latest
-    echo "v0.1"
-    echo $latest
-    exit 1
+    echo "v"$version
+}
+
+fnVersionCheck () {
+  latest=$(curl -s https://raw.githubusercontent.com/runserve/runserve/master/runserve.latest)
+  if [[ "$version" != "$latest" ]]; then
+    PURPLE='\033[0;35m'
+    NC='\033[0m' # No Color
+    echo ' '
+    echo -e "${PURPLE}          NEW VERSION IS AVAILABLE "
+    echo '          ************************'
+    echo '          *   runserve v.'$latest'   *'
+    echo '          ************************'
+    echo ' '
+    echo -e "run: ${NC}runserve upgrade${PURPLE} - to update to newest version"
+    echo -e "${NC}"
+  fi
 }
 
 fnBash () {
@@ -99,14 +113,6 @@ fnInitConfig () {
 ### READ CONFIG VARS:
 
 
-#GLOBAL_CONFIG=~/.config/runserve/runserve.config
-LOCAL_CONFIG=./.runserve/config
-#source $GLOBAL_CONFIG
-if [ -f $LOCAL_CONFIG ]; then
-    source $LOCAL_CONFIG
-else
-  fnInitConfig
-fi
 ################################################################
 
 #################################################################
@@ -137,9 +143,15 @@ elif [[ $1 = update ]]; then
             echo 'getfrombin || puttobin'
         fi
     else
-    echo 'comming soon...'
+        fnVersionCheck
     fi
     exit 1
+elif [[ $1 = upgrade ]]; then
+    if [[ "$OSTYPE" == "linux-gnu" ]]; then
+        echo "no update available try leater"
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        brew upgrade runserve
+    fi
 else fnHelp
 
 fi
