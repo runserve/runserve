@@ -1,5 +1,8 @@
 #!/bin/bash
-version='0.0.2'
+version='0.0.3'
+
+PURPLE='\033[0;35m'
+NC='\033[0m' # No Color
 
 
 fnHelp () {
@@ -20,8 +23,6 @@ fnVersion () {
 fnVersionCheck () {
   latest=$(curl -s https://raw.githubusercontent.com/runserve/runserve/master/runserve.latest)
   if [[ "$version" != "$latest" ]]; then
-    PURPLE='\033[0;35m'
-    NC='\033[0m' # No Color
     echo ' '
     echo -e "${PURPLE}          NEW VERSION IS AVAILABLE "
     echo '          ************************'
@@ -30,6 +31,10 @@ fnVersionCheck () {
     echo ' '
     echo -e "run: ${NC}runserve upgrade${PURPLE} - to update to newest version"
     echo -e "${NC}"
+  elif [[ $1 = update ]]; then
+    echo " "
+    echo -e "Latest runserve version: $latest - everything is updated!"
+    echo " "
   fi
 }
 
@@ -143,7 +148,7 @@ elif [[ $1 = update ]]; then
             echo 'getfrombin || puttobin'
         fi
     else
-        fnVersionCheck
+        fnVersionCheck "$1"
     fi
     exit 1
 elif [[ $1 = upgrade ]]; then

@@ -1,0 +1,9 @@
+#!/bin/bash
+ver=$(cat runserve.latest)
+
+echo $version
+git add .
+git commit -m "$ver"
+git push
+git tag $ver
+git push origin $ver
