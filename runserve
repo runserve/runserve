@@ -11,7 +11,11 @@ fnHelp () {
 }
 
 fnVersion () {
+  source <(curl -s https://raw.githubusercontent.com/runserve/runserve/master/runserve.latest)
+    sleep 2
+    echo $latest
     echo "v0.1"
+    echo $latest
     exit 1
 }
 
@@ -51,14 +55,14 @@ fnInitConfig () {
             echo "gitEmail='$gitEmail'" >> $LOCAL_CONFIG
         fi
         echo "Choose RUNSERVE version:"
-            echo "2) Angular 7.3.1"
+            echo "1) Angular 7.3.1"
             echo "2) Angular 7.3.2"
-            echo "2) Angular 7.3.3"
+            echo "3) Angular 7.3.3"
             read -p "Choose: " dockerImage
             if [[ $dockerImage = 1 || $docker_image = 7.3.1 ]]; then
                 dockerImage="runserve/angular_7.3.1:0.1"
                 echo $dockerImage
-            if [[ $dockerImage = 2 || $docker_image = 7.3.2 ]]; then
+            elif [[ $dockerImage = 2 || $docker_image = 7.3.2 ]]; then
                 dockerImage="runserve/angular_7.3.2:0.1"
                 echo $dockerImage
             elif [[ $dockerImage = 3 || $dockerImage = 7.3.3 ]]; then
@@ -73,7 +77,8 @@ fnInitConfig () {
             echo "containerName='$containerName'" >> $LOCAL_CONFIG
         fi
     if [[ $1 = bash ]]; then fnBash
-    else exit 1;
+    else
+      exit 1;
     fi
 }
 
