@@ -1,5 +1,5 @@
 #!/bin/bash
-version='0.0.3'
+version='0.0.4'
 
 PURPLE='\033[0;35m'
 NC='\033[0m' # No Color
@@ -60,18 +60,18 @@ fnInitConfig () {
     touch ./.runserve/config
         read -p 'Choose Angular local port (4200-4219)[4200]: ' port
         if [ ${#port} -lt 3 ]; then
-            echo "port='4200'" > $LOCAL_CONFIG
+            echo "port='4200'" > ./.runserve/config
             port=4200
         else
-            echo "port='$port'" >> $LOCAL_CONFIG
+            echo "port='$port'" >> ./.runserve/config
         fi
         read -p 'Github login: ' gitUser
         if [ ${#gitUser} -gt 3 ]; then
-            echo "gitUser='$gitUser'" >> $LOCAL_CONFIG
+            echo "gitUser='$gitUser'" >> ./.runserve/config
         fi
         read -p 'Github email: ' gitEmail
         if [ ${#gitEmail} -gt 3 ]; then
-            echo "gitEmail='$gitEmail'" >> $LOCAL_CONFIG
+            echo "gitEmail='$gitEmail'" >> ./.runserve/config
         fi
         echo "Choose RUNSERVE version:"
             echo "1) Angular 7.3.1"
@@ -88,12 +88,12 @@ fnInitConfig () {
                 dockerImage="runserve/angular_7.3.3:0.1"
                 echo $dockerImage
             fi
-            echo "dockerImage='$dockerImage'" >> $LOCAL_CONFIG
+            echo "dockerImage='$dockerImage'" >> ./.runserve/config
         read -p "Default container name [angular-dev-env-"$port"]: " containerName
         if [ ${#containerName} -lt 3 ]; then
-            echo "containerName='angular-dev-env'" >> $LOCAL_CONFIG
+            echo "containerName='angular-dev-env'" >> ./.runserve/config
         else
-            echo "containerName='$containerName'" >> $LOCAL_CONFIG
+            echo "containerName='$containerName'" >> ./.runserve/config
         fi
     if [[ $1 = bash ]]; then fnBash
     else
