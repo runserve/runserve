@@ -1,2 +1,0 @@
-#!/bin/bash
-docker build -t runserve/angular_7.3.3:0.1 .

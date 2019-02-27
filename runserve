@@ -1,5 +1,5 @@
 #!/bin/bash
-version='0.0.4'
+version='0.0.6'
 
 PURPLE='\033[0;35m'
 NC='\033[0m' # No Color
@@ -40,61 +40,97 @@ fnVersionCheck () {
 
 fnBash () {
     fnGetConfig
-    docker run --rm --name=$containerName-$port -it -v $(pwd):/app -e GITUSER="$gitUser" -e GITEMAIL="$gitEmail" -e PORT=$port -p $port:$port -p 8080:8080 $dockerImage containerStart $2 $3 $4 $5 $6 $7 $8 $9
+    docker run --rm --name=$containerName-$port -it -v $(pwd):/app -e GITUSER="$gitUser" -e GITEMAIL="$gitEmail" -e PORT=4200 -p $port:4200 -p 8080:8080 $dockerImage containerStart $2 $3 $4 $5 $6 $7 $8 $9
     #read -p "Commit changes before terminate runserver? [Y/n]: " changes
     exit 1
 }
 
 fnGetConfig () {
-    source .runserve/config
-    if [ ${#containerName} -lt '2' ]; then
-      fnInitConfig
-    else
+    if [ -f ".runserve/config" ]; then
       source .runserve/config
+    else
+        mkdir .runserve
+        touch ./.runserve/config
     fi
+
 }
 
-fnInitConfig () {
-    ### CHECK CONFIG VARS:
-    mkdir .runserve
-    touch ./.runserve/config
-        read -p 'Choose Angular local port (4200-4219)[4200]: ' port
+fnInitChooseEnvironment () {
+    echo > ./.runserve/config
+    echo "Choose environment:"
+        echo "1) Angular"
+        echo "2) NodeJS"
+        echo "3) Typescript"
+        read -p "Choose number [$environment]: " envNewNo
+        if [[ $envNewNo = 1 ]]; then fnInitChooseAngularVersion; environment="Angular"
+        elif [[ $envNewNo = 2 ]]; then fnInitChooseNodeJSVersion; environment="NodeJS"
+        elif [[ $envNewNo = 3 ]]; then fnInitChooseTypescriptVersion; environment="Typescript"
+        else envNewNo=$envNo
+        fi
+        echo "envNo='$envNewNo'" >> ./.runserve/config
+        echo "environment='$environment'" >> ./.runserve/config
+        echo "dockerImage='$dockerImage'" >> ./.runserve/config
+}
+
+fnInitChooseAngularVersion () {
+        read -p "Available versions: [7.3.1], [7.3.2], [7.3.3], [latest]: " dockerImage
+            if [[ $dockerImage = 7.3.1  || $dockerImage = 7.3.2 || $dockerImage = 7.3.3 ]]; then dockerImage="runserve/angular:$dockerImage"
+            else dockerImage="runserve/angular:latest"
+            fi
+        port=4200
+        read -p "Choose Angular local port [$port]: " port
         if [ ${#port} -lt 3 ]; then
             echo "port='4200'" > ./.runserve/config
-            port=4200
         else
             echo "port='$port'" >> ./.runserve/config
         fi
-        read -p 'Github login: ' gitUser
-        if [ ${#gitUser} -gt 3 ]; then
-            echo "gitUser='$gitUser'" >> ./.runserve/config
-        fi
-        read -p 'Github email: ' gitEmail
-        if [ ${#gitEmail} -gt 3 ]; then
-            echo "gitEmail='$gitEmail'" >> ./.runserve/config
-        fi
-        echo "Choose RUNSERVE version:"
-            echo "1) Angular 7.3.1"
-            echo "2) Angular 7.3.2"
-            echo "3) Angular 7.3.3"
-            read -p "Choose: " dockerImage
-            if [[ $dockerImage = 1 || $docker_image = 7.3.1 ]]; then
-                dockerImage="runserve/angular_7.3.1:0.1"
-                echo $dockerImage
-            elif [[ $dockerImage = 2 || $docker_image = 7.3.2 ]]; then
-                dockerImage="runserve/angular_7.3.2:0.1"
-                echo $dockerImage
-            elif [[ $dockerImage = 3 || $dockerImage = 7.3.3 ]]; then
-                dockerImage="runserve/angular_7.3.3:0.1"
-                echo $dockerImage
+}
+
+fnInitChooseNodeVersion () {
+        echo "NODEJS SERVER IS NOT AVAILABLE IN THIS VERSION" 
+}
+
+fnInitChooseTypescriptVersion () {
+        read -p "Available versions: [3.2.4], [latest]: " dockerImage
+            if [[ $dockerImage = 3.2.4] ]]; then dockerImage="runserve/typescript:$docker_image"
+            else dockerImage="runserve/typescript:latest"
             fi
-            echo "dockerImage='$dockerImage'" >> ./.runserve/config
-        read -p "Default container name [angular-dev-env-"$port"]: " containerName
+}
+
+fnInitGitConfig () {
+    read -p "Configure GIT? [Y/n]: " gitConfig
+    if [[ $gitConfig = n] ]]; then
+        echo "GIT skipped"
+    else
+        read -p "Git login [$gitUser]: " gitUser
+        echo "gitUser='$gitUser'" >> ./.runserve/config
+        read -p "Git email [$gitEmail]: " gitEmail
+        echo "gitEmail='$gitEmail'" >> ./.runserve/config
+        read -p "Git address [$gitAddress]: " gitAddress
+        echo "gitAddress='$gitAddress'" >> ./.runserve/config
+    fi
+}
+
+fnInitContainerName () {
+        read -p "Default container name [runserve-dev-env]: " containerName
         if [ ${#containerName} -lt 3 ]; then
-            echo "containerName='angular-dev-env'" >> ./.runserve/config
+            echo "containerName='runserve-dev-env'" >> ./.runserve/config
         else
             echo "containerName='$containerName'" >> ./.runserve/config
         fi
+}
+
+
+fnInitConfig () {
+    ### CHECK CONFIG VARS:
+    fnGetConfig
+    fnInitChooseEnvironment
+    fnInitGitConfig
+    fnInitContainerName
+
+
+
+
     if [[ $1 = bash ]]; then fnBash
     else
       exit 1;

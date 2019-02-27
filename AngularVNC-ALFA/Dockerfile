@@ -17,13 +17,15 @@ RUN apt install nodejs -y
 RUN npm install -g @angular/cli@7.3.3
 RUN npm install -g typescript@3.2.4
 RUN npm install -g yarn
+RUN npm install -g prettier
+
 
 RUN add-apt-repository ppa:webupd8team/atom -y
 RUN apt install atom -y
 
 
 RUN apt update && apt upgrade -y
-EXPOSE 4200-4219
+EXPOSE 4200
 
 ADD containerStart.sh /usr/local/bin/containerStart
 RUN chmod +x /usr/local/bin/containerStart
