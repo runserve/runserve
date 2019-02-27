@@ -1,6 +1,6 @@
 
+port='4206'
 envNo='1'
-environment='Angular'
 dockerImage='runserve/angular:latest'
 gitUser=''
 gitEmail=''

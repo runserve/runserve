@@ -61,14 +61,14 @@ fnInitChooseEnvironment () {
         echo "1) Angular"
         echo "2) NodeJS"
         echo "3) Typescript"
-        read -p "Choose number [$environment]: " envNewNo
-        if [[ $envNewNo = 1 ]]; then fnInitChooseAngularVersion; environment="Angular"
-        elif [[ $envNewNo = 2 ]]; then fnInitChooseNodeJSVersion; environment="NodeJS"
-        elif [[ $envNewNo = 3 ]]; then fnInitChooseTypescriptVersion; environment="Typescript"
+        read -p "Choose number [$envNo]: " envNewNo
+        if [[ -z $envNewNo ]]; then envNewNo=$envNo; fi
+        if [[ $envNewNo = 1 ]]; then fnInitChooseAngularVersion;
+        elif [[ $envNewNo = 2 ]]; then fnInitChooseNodeJSVersion;
+        elif [[ $envNewNo = 3 ]]; then fnInitChooseTypescriptVersion;
         else envNewNo=$envNo
         fi
         echo "envNo='$envNewNo'" >> ./.runserve/config
-        echo "environment='$environment'" >> ./.runserve/config
         echo "dockerImage='$dockerImage'" >> ./.runserve/config
 }
 
@@ -77,8 +77,9 @@ fnInitChooseAngularVersion () {
             if [[ $dockerImage = 7.3.1  || $dockerImage = 7.3.2 || $dockerImage = 7.3.3 ]]; then dockerImage="runserve/angular:$dockerImage"
             else dockerImage="runserve/angular:latest"
             fi
-        port=4200
-        read -p "Choose Angular local port [$port]: " port
+        if [[ -z $port ]]; then port=4200; fi
+        read -p "Choose Angular local port [$port]: " newPort
+        if [[ $newPort ]]; then port=$newPort; fi
         if [ ${#port} -lt 3 ]; then
             echo "port='4200'" > ./.runserve/config
         else
@@ -99,25 +100,32 @@ fnInitChooseTypescriptVersion () {
 
 fnInitGitConfig () {
     read -p "Configure GIT? [Y/n]: " gitConfig
-    if [[ $gitConfig = n] ]]; then
+    if [[ $gitConfig = n ]]; then
         echo "GIT skipped"
     else
-        read -p "Git login [$gitUser]: " gitUser
+        read -p "Git login [$gitUser]: " gitNewUser
+        if [[ $gitNewUser ]]; then gitUser=$gitNewUser; fi
         echo "gitUser='$gitUser'" >> ./.runserve/config
-        read -p "Git email [$gitEmail]: " gitEmail
+        read -p "Git email [$gitEmail]: " gitNewEmail
+        if [[ $gitNewEmail ]]; then gitEmail=$gitNewEmail; fi
         echo "gitEmail='$gitEmail'" >> ./.runserve/config
-        read -p "Git address [$gitAddress]: " gitAddress
+        read -p "Git address [$gitAddress]: " gitNewAddress
+        if [[ $gitNewAddress ]]; then gitAddress=$gitNewAddress; fi
         echo "gitAddress='$gitAddress'" >> ./.runserve/config
     fi
 }
 
 fnInitContainerName () {
-        read -p "Default container name [runserve-dev-env]: " containerName
         if [ ${#containerName} -lt 3 ]; then
-            echo "containerName='runserve-dev-env'" >> ./.runserve/config
-        else
-            echo "containerName='$containerName'" >> ./.runserve/config
+            containerName='runserve-dev-env'
         fi
+        # read -p "Docker container name [$containerName]: " containerName
+        # if [ ${#containerName} -gt 3 ]; then
+            echo "containerName='$containerName'" >> ./.runserve/config
+        # else
+        #     echo "Container name must hev min 3 chars lenght!"
+        #     fnInitContainerName
+        # fi
 }
 
 
