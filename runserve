@@ -1,5 +1,5 @@
 #!/bin/bash
-version='0.0.6'
+version='0.0.7'
 
 PURPLE='\033[0;35m'
 NC='\033[0m' # No Color
@@ -92,7 +92,7 @@ fnInitChooseNodeVersion () {
 
 fnInitChooseTypescriptVersion () {
         read -p "Available versions: [3.2.4], [latest]: " dockerImage
-            if [[ $dockerImage = 3.2.4] ]]; then dockerImage="runserve/typescript:$docker_image"
+            if [[ $dockerImage = 3.2.4] ]]; then dockerImage="runserve/typescript:$dockerImage"
             else dockerImage="runserve/typescript:latest"
             fi
 }
