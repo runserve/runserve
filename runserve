@@ -73,8 +73,8 @@ fnInitChooseEnvironment () {
 }
 
 fnInitChooseAngularVersion () {
-        read -p "Available versions: [7.3.1], [7.3.2], [7.3.3], [latest]: " dockerImage
-            if [[ $dockerImage = 7.3.1  || $dockerImage = 7.3.2 || $dockerImage = 7.3.3 ]]; then dockerImage="runserve/angular:$dockerImage"
+        read -p "Available versions: [7.3.1], [7.3.2], [7.3.3], [7.3.4], [7.3.5], [latest]: " dockerImage
+            if [[ $dockerImage = 7.3.1  || $dockerImage = 7.3.2 || $dockerImage = 7.3.3 || $dockerImage = 7.3.4 || $dockerImage = 7.3.5 ]]; then dockerImage="runserve/angular:$dockerImage"
             else dockerImage="runserve/angular:latest"
             fi
         if [[ -z $port ]]; then port=4200; fi
