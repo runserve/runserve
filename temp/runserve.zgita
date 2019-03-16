@@ -1,8 +1,7 @@
 #!/bin/bash
-version='0.0.9'
+version='0.0.10'
 
 PURPLE='\033[0;35m'
-YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
 
@@ -25,15 +24,12 @@ fnVersionCheck () {
   latest=$(curl -s https://raw.githubusercontent.com/runserve/runserve/master/runserve.latest)
   if [[ "$version" != "$latest" ]]; then
     echo ' '
-    echo -e "${YELLOW}         NEW VERSION IS AVAILABLE !!! "
-    echo ' '
-    echo '          *************************'
-    echo '          *                       *'
+    echo -e "${PURPLE}          NEW VERSION IS AVAILABLE "
+    echo '          ************************'
     echo '          *   runserve v.'$latest'   *'
-    echo '          *                       *'
-    echo '          *************************'
+    echo '          ************************'
     echo ' '
-    echo -e "run: ${NC}runserve upgrade${YELLOW} - to update to newest version"
+    echo -e "run: ${NC}runserve upgrade${PURPLE} - to update to newest version"
     echo -e "${NC}"
   elif [[ $1 = update ]]; then
     echo " "
@@ -201,7 +197,7 @@ elif [[ $1 = update ]]; then
     exit 1
 elif [[ $1 = upgrade ]]; then
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
-        curl -LJO https://github.com/runserve/runserve/blob/master/runserve > /usr/local/bin/runserve
+        echo "no update available try leater"
     elif [[ "$OSTYPE" == "darwin"* ]]; then
         brew upgrade runserve
     fi
