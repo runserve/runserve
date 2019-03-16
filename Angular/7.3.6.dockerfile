@@ -11,7 +11,7 @@ WORKDIR /app
 
 VOLUME ["/app"]
 
-RUN npm install -g @angular/cli@7.3.4
+RUN npm install -g @angular/cli@7.3.6
 RUN npm install -g typescript@3.2.4
 RUN npm install -g yarn
 RUN npm install -g prettier

@@ -1,5 +1,5 @@
 #!/bin/bash
-version='0.0.13'
+version='0.0.12'
 
 PURPLE='\033[0;35m'
 YELLOW='\033[0;33m'
@@ -9,7 +9,10 @@ NC='\033[0m' # No Color
 fnHelp () {
     echo ' '
     echo "runserve help            - show help!!!"
-    echo "         init            - initialize runserver config"
+    echo "         bash            - go to runserve container and run bash shell"
+    echo "         config          - initialize runserve global config"
+    echo "         init            - initialize runserve individual config in present folder"
+    echo "         force           - force kill runserve container and restart to bash shell"
     echo "         version         - version of this file"
     echo "         update          - updating this file"
     echo ' '
@@ -42,9 +45,20 @@ fnVersionCheck () {
   fi
 }
 
-fnBash () {
+fnForce () {
     fnGetConfig
-    docker run --rm --name=$containerName-$port -it -v $(pwd):/app -e GITUSER="$gitUser" -e GITEMAIL="$gitEmail" -e PORT=4200 -p $port:4200 -p 8080:8080 $dockerImage containerStart $2 $3 $4 $5 $6 $7 $8 $9
+    echo 'Killing runserve container...'
+    docker stop $containerName -t 0
+    echo 'Restarting container...'
+    sleep 3
+    fnBash
+    exit 1
+}
+
+fnBash () {
+    fnVersionCheck
+    fnGetConfig
+    docker run --rm --name='runserve-dev-env' -it -v $(pwd):/app -e GITUSER="$gitUser" -e GITEMAIL="$gitEmail" -e PORT=4200 -p 4200:4200 -p 3000:3000 -p 8080:8080 $dockerImage containerStart $2 $3 $4 $5 $6 $7 $8 $9
     #read -p "Commit changes before terminate runserver? [Y/n]: " changes
     exit 1
 }
@@ -52,9 +66,10 @@ fnBash () {
 fnGetConfig () {
     if [ -f ".runserve/config" ]; then
       source .runserve/config
+    elif [ -f "~/.runserve/config" ]; then
+      source ~/.runserve/config
     else
-        mkdir .runserve
-        touch ./.runserve/config
+        fnInitGlobalConfig
     fi
 
 }
@@ -76,19 +91,28 @@ fnInitChooseEnvironment () {
         echo "dockerImage='$dockerImage'" >> ./.runserve/config
 }
 
+fnInitChooseGlobalEnvironment () {
+    echo > ~/.runserve/config
+    echo "Choose environment:"
+        echo "1) Angular"
+        echo "2) NodeJS"
+        echo "3) Typescript"
+        read -p "Choose number [$envNo]: " envNewNo
+        if [[ -z $envNewNo ]]; then envNewNo=$envNo; fi
+        if [[ $envNewNo = 1 ]]; then fnInitChooseAngularVersion;
+        elif [[ $envNewNo = 2 ]]; then fnInitChooseNodeJSVersion;
+        elif [[ $envNewNo = 3 ]]; then fnInitChooseTypescriptVersion;
+        else envNewNo=$envNo
+        fi
+        echo "envNo='$envNewNo'" >> ~/.runserve/config
+        echo "dockerImage='$dockerImage'" >> ~/.runserve/config
+}
+
 fnInitChooseAngularVersion () {
-        read -p "Available versions: [7.3.1], [7.3.2], [7.3.3], [7.3.4], [7.3.5], [latest]: " dockerImage
-            if [[ $dockerImage = 7.3.1  || $dockerImage = 7.3.2 || $dockerImage = 7.3.3 || $dockerImage = 7.3.4 || $dockerImage = 7.3.5 ]]; then dockerImage="runserve/angular:$dockerImage"
+        read -p "Available versions: [7.3.1], [7.3.2], [7.3.3], [7.3.4], [7.3.5], [7.3.6], [latest]: " dockerImage
+            if [[ $dockerImage = 7.3.1  || $dockerImage = 7.3.2 || $dockerImage = 7.3.3 || $dockerImage = 7.3.4 || $dockerImage = 7.3.5 || $dockerImage = 7.3.6 ]]; then dockerImage="runserve/angular:$dockerImage"
             else dockerImage="runserve/angular:latest"
             fi
-        if [[ -z $port ]]; then port=4200; fi
-        read -p "Choose Angular local port [$port]: " newPort
-        if [[ $newPort ]]; then port=$newPort; fi
-        if [ ${#port} -lt 3 ]; then
-            echo "port='4200'" > ./.runserve/config
-        else
-            echo "port='$port'" >> ./.runserve/config
-        fi
 }
 
 fnInitChooseNodeVersion () {
@@ -119,26 +143,32 @@ fnInitGitConfig () {
     fi
 }
 
-fnInitContainerName () {
-        if [ ${#containerName} -lt 3 ]; then
-            containerName='runserve-dev-env'
-        fi
-        # read -p "Docker container name [$containerName]: " containerName
-        # if [ ${#containerName} -gt 3 ]; then
-            echo "containerName='$containerName'" >> ./.runserve/config
-        # else
-        #     echo "Container name must hev min 3 chars lenght!"
-        #     fnInitContainerName
-        # fi
+fnInitGlobalGitConfig () {
+        read -p "Git login [$gitUser]: " gitNewUser
+        if [[ $gitNewUser ]]; then gitUser=$gitNewUser; fi
+        echo "gitUser='$gitUser'" >> ~/.runserve/config
+        read -p "Git email [$gitEmail]: " gitNewEmail
+        if [[ $gitNewEmail ]]; then gitEmail=$gitNewEmail; fi
+        echo "gitEmail='$gitEmail'" >> ~/.runserve/config
 }
 
+fnInitGlobalConfig (){
+    fnGetConfig
+    mkdir ~/.runserve
+    touch ~/.runserve/config
+    fnInitChooseGlobalEnvironment
+    fnInitGlobalGitConfig
+    
+}
 
 fnInitConfig () {
     ### CHECK CONFIG VARS:
     fnGetConfig
+    mkdir ./.runserve
+    touch ./.runserve/config
     fnInitChooseEnvironment
     fnInitGitConfig
-    fnInitContainerName
+    
 
 
 
@@ -174,7 +204,6 @@ stty quit "^Z"
 trap " docker stop $containerName" 3;
 trap ctrl_c INT
 function ctrl_c(){
-    read -p "Commit changes before terminate runserver?" changes
     echo " docker stopping, wait few seconds..."
     docker stop $containerName
     echo 'docker stopped'
@@ -183,9 +212,11 @@ function ctrl_c(){
 
 
 if [[ $1 = version ]]; then fnVersion
+elif [[ $1 = config ]]; then fnInitGlobalConfig
 elif [[ $1 = init ]]; then fnInitConfig
 elif [[ $1 = -h || $1 = --help || $1 = help ]]; then fnHelp
 elif [[ $1 = bash ]]; then fnBash
+elif [[ $1 = force ]]; then fnForce
 elif [[ $1 = update ]]; then
     if [[ $2 = dev ]]; then
         if [[ $3 = getfrombin ]]; then

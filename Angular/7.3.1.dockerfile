@@ -15,6 +15,7 @@ RUN npm install -g @angular/cli@7.3.1
 RUN npm install -g typescript@3.2.4
 RUN npm install -g yarn
 RUN npm install -g prettier
+RUN npm install -g gulp
 
 
 EXPOSE 4200
