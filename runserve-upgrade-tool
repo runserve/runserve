@@ -1,0 +1,6 @@
+#!/bin/bash
+
+curl https://raw.githubusercontent.com/runserve/runserve/master/runserve > /usr/local/bin/runserve
+
+#wget -q --no-check-certificate --content-disposition https://raw.githubusercontent.com/runserve/runserve/master/runserve -O /usr/local/bin/runserve
+

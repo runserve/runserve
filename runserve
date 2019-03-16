@@ -1,5 +1,5 @@
 #!/bin/bash
-version='0.0.11'
+version='0.0.12'
 
 PURPLE='\033[0;35m'
 YELLOW='\033[0;33m'
@@ -201,7 +201,7 @@ elif [[ $1 = update ]]; then
     exit 1
 elif [[ $1 = upgrade ]]; then
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
-        curl -OL https://github.com/runserve/runserve/blob/master/runserve > /usr/local/bin/runserve
+    curl https://raw.githubusercontent.com/runserve/runserve/master/runserve > /usr/local/bin/runserve
     elif [[ "$OSTYPE" == "darwin"* ]]; then
         brew upgrade runserve
     fi
