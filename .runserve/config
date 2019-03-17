@@ -1,8 +1,0 @@
-
-port='4200'
-envNo='1'
-dockerImage='runserve/angular:latest'
-gitUser=''
-gitEmail=''
-gitAddress=''
-containerName='runserve-dev-env'

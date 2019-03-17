@@ -1,5 +1,5 @@
 #!/bin/bash
-version='0.0.12'
+version='0.0.14'
 
 PURPLE='\033[0;35m'
 YELLOW='\033[0;33m'
@@ -64,12 +64,12 @@ fnBash () {
 }
 
 fnGetConfig () {
-    if [ -f ".runserve/config" ]; then
-      source .runserve/config
-    elif [ -f "~/.runserve/config" ]; then
+    if [ -f "./.runserve/config" ]; then
+      source ./.runserve/config
+    else 
       source ~/.runserve/config
-    else
-        fnInitGlobalConfig
+    # else
+    #     fnInitGlobalConfig
     fi
 
 }
@@ -153,7 +153,6 @@ fnInitGlobalGitConfig () {
 }
 
 fnInitGlobalConfig (){
-    fnGetConfig
     mkdir ~/.runserve
     touch ~/.runserve/config
     fnInitChooseGlobalEnvironment
