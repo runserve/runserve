@@ -1,5 +1,5 @@
 #!/bin/bash
-version='0.0.17'
+version='0.0.18'
 
 PURPLE='\033[0;35m'
 YELLOW='\033[0;33m'
@@ -58,8 +58,23 @@ fnForce () {
 fnBash () {
     fnVersionCheck
     fnGetConfig
-    docker run --rm --name='runserve-dev-env' -it -v $(pwd):/app -e GITUSER="$gitUser" -e GITEMAIL="$gitEmail" -e PORT=4200 -p 4200:4200 -p 3000:3000 -p 8080:8080 $dockerImage containerStart $2 $3 $4 $5 $6 $7 $8 $9
-    #read -p "Commit changes before terminate runserver? [Y/n]: " changes
+    docker run --rm --name='runserve-dev-env' -it -v $(pwd):/app -e GITUSER="$gitUser" -e GITEMAIL="$gitEmail" -e PORT=4200 -p 4200:4200 -p 3000:3000 $dockerImage containerStart
+    exit 1
+}
+
+fnRun () {
+    fnVersionCheck
+    fnGetConfig
+    arg1=$1
+    arg2=$2
+    arg3=$3
+    arg4=$4
+    arg5=$5
+    arg6=$6
+    arg7=$7
+    arg8=$8
+    arg9=$9
+    docker run --rm --name='runserve-dev-env' -it -v $(pwd):/app -e GITUSER="$gitUser" -e GITEMAIL="$gitEmail" -e PORT=4200 -p 4200:4200 -p 3000:3000 $dockerImage containerStart $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8 $arg9
     exit 1
 }
 
@@ -192,31 +207,18 @@ function ctrl_c(){
 #################################################################
 
 
-if [[ $1 = version ]]; then fnVersion
+if [[ $1 = -v || $1 = --version || $1 = version ]]; then fnVersion
 elif [[ $1 = config ]]; then fnInitGlobalConfig
 elif [[ $1 = init ]]; then fnInitConfig
 elif [[ $1 = -h || $1 = --help || $1 = help ]]; then fnHelp
-elif [[ $1 = bash ]]; then fnBash
 elif [[ $1 = force ]]; then fnForce
-elif [[ $1 = update ]]; then
-    if [[ $2 = dev ]]; then
-        if [[ $3 = getfrombin ]]; then
-            cp ~/bin/runserve ./runserve
-        elif [[ $3 = puttobin ]]; then
-            cp ./runserve ~/bin/runserve
-        else
-            echo 'getfrombin || puttobin'
-        fi
-    else
-        fnVersionCheck "$1"
-    fi
-    exit 1
+elif [[ $1 = update ]]; then fnVersionCheck "$1"
 elif [[ $1 = upgrade ]]; then
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
     curl https://raw.githubusercontent.com/runserve/runserve/master/runserve > /usr/local/bin/runserve
     elif [[ "$OSTYPE" == "darwin"* ]]; then
         brew upgrade runserve
     fi
-else fnHelp
-
+else 
+    fnRun $1 $2 $3 $4 $5 $6 $7 $8 $9
 fi
