@@ -1,6 +1,6 @@
 {
 	"config": {
-		"project_title": "Runserve",
+		"project_title": "runserve.io",
 		"theme": "default",
 		"header_file": "https://raw.githubusercontent.com/runserve/runserve/master/docs/header.md",
 		"footer_file": "https://raw.githubusercontent.com/runserve/runserve/master/docs/header.md"
