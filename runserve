@@ -48,7 +48,7 @@ fnVersionCheck () {
 fnForce () {
     fnGetConfig
     echo 'Killing runserve container...'
-    docker stop $containerName -t 0
+    docker stop runserve-dev-env -t 0
     echo 'Restarting container...'
     sleep 3
     fnBash
