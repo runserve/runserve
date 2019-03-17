@@ -1,0 +1,26 @@
+{
+	"config": {
+		"project_title": "Runserve",
+		"theme": "default",
+		"header_file": "https://raw.githubusercontent.com/runserve/runserve/master/docs/header.md",
+		"footer_file": "https://raw.githubusercontent.com/runserve/runserve/master/docs/header.md"
+	},
+	"menu": {
+		"items": [{
+				"link": "index",
+				"name": "ReadME",
+				"file": "https://raw.githubusercontent.com/runserve/runserve/master/docs/readme.md"
+			},
+			{
+				"link": "changelog",
+				"name": "ChangeLOG",
+				"file": "https://raw.githubusercontent.com/runserve/runserve/master/docs/changelog.md"
+			},
+			{
+				"link": "link3",
+				"name": "name3",
+				"file": "file3"
+			}
+		]
+	}
+}

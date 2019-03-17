@@ -216,10 +216,12 @@ elif [[ $1 = force ]]; then fnForce
 elif [[ $1 = update ]]; then fnVersionCheck "$1"
 elif [[ $1 = upgrade ]]; then
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    curl https://raw.githubusercontent.com/runserve/runserve/master/runserve > /usr/local/bin/runserve
+        curl https://raw.githubusercontent.com/runserve/runserve/master/runserve > /usr/local/bin/runserve
     elif [[ "$OSTYPE" == "darwin"* ]]; then
         brew upgrade runserve
     fi
-else 
+elif [[ ! $1 ]]; then fnHelp
+
+else
     fnRun $1 $2 $3 $4 $5 $6 $7 $8 $9
 fi
