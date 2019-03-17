@@ -8,18 +8,18 @@
 	"menu": {
 		"items": [{
 				"link": "index",
-				"name": "ReadME",
+				"name": "Using Guide",
 				"file": "https://raw.githubusercontent.com/runserve/runserve/master/docs/readme.md"
+			},
+			{
+				"link": "install",
+				"name": "Installation",
+				"file": "https://raw.githubusercontent.com/runserve/runserve/master/docs/install.md"
 			},
 			{
 				"link": "changelog",
 				"name": "ChangeLOG",
 				"file": "https://raw.githubusercontent.com/runserve/runserve/master/docs/changelog.md"
-			},
-			{
-				"link": "install",
-				"name": "Installation Guide",
-				"file": "https://raw.githubusercontent.com/runserve/runserve/master/docs/install.md"
 			},
 			{
 				"link": "link3",
