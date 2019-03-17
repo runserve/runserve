@@ -1,5 +1,5 @@
 #!/bin/bash
-version='0.0.14'
+version='0.0.15'
 
 PURPLE='\033[0;35m'
 YELLOW='\033[0;33m'
@@ -65,7 +65,7 @@ fnBash () {
 
 fnGetConfig () {
     if [ -f "./.runserve/config" ]; then
-      source ./.runserve/config
+      source ${PWD}/.runserve/config
     else 
       source ~/.runserve/config
     # else
@@ -75,7 +75,7 @@ fnGetConfig () {
 }
 
 fnInitChooseEnvironment () {
-    echo > ./.runserve/config
+    echo > ${PWD}/.runserve/config
     echo "Choose environment:"
         echo "1) Angular"
         echo "2) NodeJS"
@@ -87,8 +87,8 @@ fnInitChooseEnvironment () {
         elif [[ $envNewNo = 3 ]]; then fnInitChooseTypescriptVersion;
         else envNewNo=$envNo
         fi
-        echo "envNo='$envNewNo'" >> ./.runserve/config
-        echo "dockerImage='$dockerImage'" >> ./.runserve/config
+        echo "envNo='$envNewNo'" >> ${PWD}/.runserve/config
+        echo "dockerImage='$dockerImage'" >> ${PWD}/.runserve/config
 }
 
 fnInitChooseGlobalEnvironment () {
@@ -163,8 +163,8 @@ fnInitGlobalConfig (){
 fnInitConfig () {
     ### CHECK CONFIG VARS:
     fnGetConfig
-    mkdir ./.runserve
-    touch ./.runserve/config
+    mkdir ${PWD}/.runserve
+    touch ${PWD}/.runserve/config
     fnInitChooseEnvironment
     fnInitGitConfig
     
@@ -178,24 +178,6 @@ fnInitConfig () {
     fi
 }
 
-
-
-
-
-
-
-#################################################################
-### OS DETECT:
-# if [[ "$OSTYPE" == "linux-gnu" ]]; then
-#         RAND=$(shuf -i 100-199 -n 1)
-# elif [[ "$OSTYPE" == "darwin"* ]]; then
-#         RAND=$(jot -r 1 100 199)
-# fi
-#################################################################
-### READ CONFIG VARS:
-
-
-################################################################
 
 #################################################################
 ## CTRL-V CTRL-Z KEYPRESS:
