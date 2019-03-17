@@ -1,12 +1,14 @@
-# Installetion guide:
-## Linux:
+# Installation guide:
+
+## Linux
+
 ### Get deb file:
 > https://runserve.io/download/runserve.deb
 
 ### Get rpm file:
 > https://runserve.io/download/runserve.rpm
 
-## MacOS:
+## MacOS
 ### Install using brew:
 
 > brew tap runserve/runserve
@@ -15,4 +17,6 @@
 ## Updating to last stable version:
 > runserve update
 > runserve upgrade
-ac
+
+## Windows
+I will create versions for windows in the future if you need it.

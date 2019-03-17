@@ -9,7 +9,7 @@
 		"items": [{
 				"link": "index",
 				"name": "Using Guide",
-				"file": "https://raw.githubusercontent.com/runserve/runserve/master/docs/readme.md"
+				"file": "https://raw.githubusercontent.com/runserve/runserve/master/docs/using.md"
 			},
 			{
 				"link": "install",
