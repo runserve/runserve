@@ -1,5 +1,5 @@
 #!/bin/bash
-version='0.0.18'
+version='0.1.0'
 
 PURPLE='\033[0;35m'
 YELLOW='\033[0;33m'
@@ -79,12 +79,13 @@ fnRun () {
 }
 
 fnGetConfig () {
-    if [ -f "./.runserve/config" ]; then
+    if [ -f ${PWD}/.runserve/config ]; then
       source ${PWD}/.runserve/config
-    else 
+    elif [ -f ~/.runserve/config ]; then
       source ~/.runserve/config
-    # else
-    #     fnInitGlobalConfig
+    else
+        echo -e "Runserve need to run correctly some git global variables. First run ${YELLOW}runserve config${NC} to create this."
+        exit 1
     fi
 
 }

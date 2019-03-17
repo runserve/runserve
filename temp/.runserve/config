@@ -1,6 +1,0 @@
-
-envNo='1'
-dockerImage='runserve/angular:7.3.3'
-gitUser='mirek001'
-gitEmail='mirek.grzegorczyk@gmail.com'
-gitAddress=''
