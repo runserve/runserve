@@ -17,6 +17,11 @@
 				"file": "https://raw.githubusercontent.com/runserve/runserve/master/docs/changelog.md"
 			},
 			{
+				"link": "install",
+				"name": "Installation Guide",
+				"file": "https://raw.githubusercontent.com/runserve/runserve/master/docs/install.md"
+			},
+			{
 				"link": "link3",
 				"name": "name3",
 				"file": "file3"
