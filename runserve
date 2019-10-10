@@ -1,5 +1,9 @@
 #!/bin/bash
-version='0.1.1'
+version='0.2.0'
+
+# wywalamy global config i wszystkie instrukcje
+# w init zamiast ywbierać wersje do ściągnięcia z dokera budujemy plik dockerfile
+# dodajemy publish_patch/minion/major_version jako funkcje runserve, automatyczne tworzenie pliku changelog jeśli nie istnieje
 
 PURPLE='\033[0;35m'
 YELLOW='\033[0;33m'
@@ -9,7 +13,7 @@ NC='\033[0m' # No Color
 fnHelp () {
     echo ' '
     echo "runserve help            - show help!!!"
-    echo "         bash            - go to runserve container and run bash shell"
+    echo "         bash            - run bash shell runserve container"
     echo "         config          - initialize runserve global config"
     echo "         init            - initialize runserve individual config in present folder"
     echo "         force           - force kill runserve container and restart to bash shell"
