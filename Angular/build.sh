@@ -6,4 +6,5 @@
 # docker build -f 7.3.4.dockerfile -t runserve/angular:7.3.4 .
 # docker build -f 7.3.5.dockerfile -t runserve/angular:7.3.5 .
 # docker build -f 7.3.6.dockerfile -t runserve/angular:7.3.6 .
-docker build -f 7.3.6.dockerfile -t runserve/angular:latest .
+docker build -f 8.3.dockerfile -t runserve/angular:latest .
+docker build -f latest.dockerfile -t runserve/angular:latest .

@@ -1,13 +1,13 @@
 {
 	"config": {
 		"project_title": "runserve.io",
-		"theme": "default",
+		"theme": "bootstrap-simple",
 		"header_file": "https://raw.githubusercontent.com/runserve/runserve/master/docs/header.md",
 		"footer_file": "https://raw.githubusercontent.com/runserve/runserve/master/docs/header.md"
 	},
 	"menu": {
 		"items": [{
-				"link": "using",
+				"link": "index",
 				"name": "Using Guide",
 				"file": "https://raw.githubusercontent.com/runserve/runserve/master/docs/using.md"
 			},

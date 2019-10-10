@@ -49,8 +49,6 @@ fnForce () {
     fnGetConfig
     echo 'Killing runserve container...'
     docker stop runserve-dev-env -t 0
-    echo 'Restarting container...'
-    sleep 3
     fnBash
     exit 1
 }
@@ -225,3 +223,4 @@ elif [[ ! $1 ]]; then fnHelp
 else
     fnRun $1 $2 $3 $4 $5 $6 $7 $8 $9
 fi
+

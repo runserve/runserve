@@ -1,0 +1,3 @@
+
+envNo='1'
+dockerImage='runserve/angular:latest'
